@@ -7,7 +7,7 @@ from dotenv import dotenv_values
 
 BASE_URL = "http://bbc.co.uk"
 
-config = dotenv_values('.env.development')
+config = dotenv_values('.env.production')
 
 def get_db_connection():
     """Establishes connection to psql database."""

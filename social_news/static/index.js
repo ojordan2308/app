@@ -1,57 +1,63 @@
 window.onload = async function load() {
-  getStories()
-}
+  getStories();
+};
 
 async function getStories() {
-  const res = await fetch('http://127.0.0.1:5000/stories', {
-    method: 'GET',
-    credentials: 'include'
-  })
-  const data = await res.json()
+  const res = await fetch(
+    "http://ec2-52-56-134-154.eu-west-2.compute.amazonaws.com:5000/stories",
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  const data = await res.json();
 
-  displayStories(data.stories)
+  displayStories(data.stories);
 }
 
 async function handleVote(e) {
-  const elemID = e.target.id.split('-')
-  const id = elemID[0]
-  const direction = elemID[1]
-  const rawRes = await fetch(`http://127.0.0.1:5000/stories/${id}/votes`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ direction }),
-    credentials: 'include'
-  })
-  const res = await rawRes.json()
-  location.reload()
+  const elemID = e.target.id.split("-");
+  const id = elemID[0];
+  const direction = elemID[1];
+  const rawRes = await fetch(
+    `http:ec2-52-56-134-154.eu-west-2.compute.amazonaws.com:5000/stories/${id}/votes`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ direction }),
+      credentials: "include",
+    }
+  );
+  const res = await rawRes.json();
+  location.reload();
 }
 
 function displayStories(stories) {
-  stories.forEach(createStory)
+  stories.forEach(createStory);
 }
 
 function createStory(story) {
-  const stories = document.getElementById('stories')
-  const storyWrapper = document.createElement('div')
+  const stories = document.getElementById("stories");
+  const storyWrapper = document.createElement("div");
   storyWrapper.innerHTML = `
 	<p>
 		<a class="title" href=${story.url}>${story.title} </a>
 		<span>(${story.score} points)</span>
 
-	</p>`
+	</p>`;
 
-  const upvoteButton = createVoteButton('upvote', `${story.id}-up`, '⬆')
-  const downvoteButton = createVoteButton('downvote', `${story.id}-down`, '⬇')
+  const upvoteButton = createVoteButton("upvote", `${story.id}-up`, "⬆");
+  const downvoteButton = createVoteButton("downvote", `${story.id}-down`, "⬇");
 
-  storyWrapper.append(upvoteButton, downvoteButton)
-  stories.append(storyWrapper)
+  storyWrapper.append(upvoteButton, downvoteButton);
+  stories.append(storyWrapper);
 }
 
 function createVoteButton(className, id, text) {
-  const button = document.createElement('button')
-  button.id = id
-  button.className = className
-  button.addEventListener('click', handleVote)
-  button.innerText = text
-  return button
+  const button = document.createElement("button");
+  button.id = id;
+  button.className = className;
+  button.addEventListener("click", handleVote);
+  button.innerText = text;
+  return button;
 }

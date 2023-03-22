@@ -6,7 +6,7 @@ from dotenv import dotenv_values
 
 app = Flask(__name__)
 
-config = dotenv_values('.env.development')
+config = dotenv_values('.env.production')
 def get_db_connection():
     """Establishes connection to psql database."""
     try:
@@ -101,3 +101,6 @@ def search() -> list:
             description = db_data[i]['description']
             result.append([title, url, description])
     return jsonify(result)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)

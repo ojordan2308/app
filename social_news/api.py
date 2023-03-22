@@ -2,9 +2,24 @@
 import psycopg2
 import psycopg2.extras
 from flask import Flask, current_app, jsonify, request, Response
-from news_scaper import get_db_connection
+from dotenv import dotenv_values
 
 app = Flask(__name__)
+
+config = dotenv_values('.env.development')
+def get_db_connection():
+    """Establishes connection to psql database."""
+    try:
+        #connection = psycopg2.connect("dbname=social_news user='oliverjordan' host=localhost")
+        connection = psycopg2.connect(user = config["DATABASE_USERNAME"],
+                                      password = config["DATABASE_PASSWORD"],
+                                      host = config["DATABASE_IP"],
+                                      port = config["DATABASE_PORT"],
+                                      database = config["DATABASE_NAME"])
+        print("Connection successful.")
+        return connection
+    except:
+        print("Error connecting to database.")
 
 conn = get_db_connection()
 
@@ -86,7 +101,3 @@ def search() -> list:
             description = db_data[i]['description']
             result.append([title, url, description])
     return jsonify(result)
-
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
